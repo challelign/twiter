@@ -48,6 +48,7 @@ const Modal = ({
           flex 
           overflow-x-hidden 
           overflow-y-auto 
+		  custom-scrollbar
           fixed 
           inset-0 
           z-50 
@@ -56,11 +57,11 @@ const Modal = ({
           bg-neutral-800
           bg-opacity-70"
 			>
-				<div className="relative w-full lg:w-2/6 my-4 mx-auto lg:max-w-3xl h-full lg:h-auto">
-					{/* content */}
+				<div className="relative w-full lg:w-2/6 my-4 mx-auto lg:max-w-3xl h-full  ">
+					{/* content to the above and below div  i remove lg:h-auto */}
 					<div
 						className=" h-full
-                            lg:h-auto
+                            
                             border-0 
                             rounded-lg 
                             shadow-lg 
@@ -91,18 +92,27 @@ const Modal = ({
 							</button>
 						</div>
 						{/* Body */}
-						<div className="relative p-7 flex-auto">{body}</div>
+						<div className="relative p-7 flex-auto overflow-y-auto">{body}</div>
 						{/* Footer */}
-						<div className="flex flex-col gap-2 p-7  ">
-							<Button
-								disabled={disabled}
-								label={actionLabel}
-								secondary
-								fullWidth
-								large
-								onClick={handleSubmit}
-							/>
+						<div className="  gap-2 p-7  ">
+							<div className="flex gap-3">
+								<Button
+									disabled={disabled}
+									label={actionLabel}
+									secondary
+									fullWidth
+									large
+									onClick={handleSubmit}
+								/>
 
+								<button
+									onClick={handleClose}
+									className="rounded-full font-semibold hover:opacity-80 transition border-2 flex items-center justify-center  gap-2 p-2 ml-auto   text-white "
+								>
+									Cancel
+									<AiOutlineClose size={20} />
+								</button>
+							</div>
 							{footer}
 						</div>
 					</div>

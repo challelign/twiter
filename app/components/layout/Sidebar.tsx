@@ -7,9 +7,18 @@ import { BiLogOut } from "react-icons/bi";
 import SidebarTweetButton from "./SidebarTweetButton";
 import { signOut } from "next-auth/react";
 import useCurrentUser from "@/hooks/useCurrentUser";
+import FollowBar from "./FollowBar";
+import useUsers from "@/hooks/useUsers";
+import Avatar from "../Avatar";
+import FollowBarMobile from "./FollowBarMobile";
 
 const Sidebar = () => {
 	const { data: currentUser } = useCurrentUser();
+	const { data: users = [] } = useUsers();
+	// if (users.length === 0) {
+	// 	return null;
+	// }
+
 	console.log("current user", currentUser);
 	const items = [
 		{
@@ -22,17 +31,18 @@ const Sidebar = () => {
 			href: "/notifications",
 			icon: BsBellFill,
 			auth: true,
+			alert: true,
 		},
 		{
 			label: "Profile",
-			href: "/users/123",
+			href: `/users/${currentUser?.id}`,
 			icon: FaUser,
 			auth: true,
 		},
 	];
 	return (
-		<div className="col-span-1 h-full pr-4 md:pr-6">
-			<div className="flex flex-col items-end">
+		<div className="col-span-1 h-full pr-4 md:pr-6 sticky top-0">
+			<div className="flex flex-col items-center">
 				<div className="space-y-2 lg:w-[230px]">
 					<SidebarLogo />
 					{items.map((item) => (
@@ -42,6 +52,7 @@ const Sidebar = () => {
 							label={item.label}
 							icon={item.icon}
 							auth={item.auth}
+							alert={item.alert}
 						/>
 					))}
 					{currentUser && (
@@ -53,6 +64,8 @@ const Sidebar = () => {
 					)}
 					<SidebarTweetButton />
 				</div>
+
+				<FollowBarMobile />
 			</div>
 		</div>
 	);

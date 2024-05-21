@@ -28,13 +28,15 @@ const Avatar: React.FC<AvatarProps> = ({ userId, isLarge, hasBorder }) => {
 		},
 		[router, userId]
 	);
-
+	//  ${isSmall ? "h-6" : "h-6"}
+	// ${isSmall ? "w-6" : "w-6"}
 	return (
 		<div
 			className={`
         ${hasBorder ? "border-4 border-black" : ""}
-        ${isLarge ? "h-32" : "h-12"}
+       ${isLarge ? "h-32" : "h-12"}
         ${isLarge ? "w-32" : "w-12"}
+	
         rounded-full 
         hover:opacity-90 
         transition 

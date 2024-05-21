@@ -15,11 +15,10 @@ export default function Layout({
 					<Sidebar />
 					<div
 						className="col-span-3 lg:col-span-2 border-x-[1px]
-                    border-neutral-800
+                    border-neutral-800 custom-scrollbar overflow-y-auto
                         "
 					>
 						{children}
-						<p className="text-white">cha</p>
 					</div>
 					<FollowBar />
 				</div>

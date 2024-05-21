@@ -27,7 +27,7 @@ export async function GET(
 
 		return NextResponse.json({ ...existingUser, followersCount });
 	} catch (error) {
-		console.log("[COURSE_ID_DELETE]", error);
+		console.log("[GET_USER]", error);
 		return new NextResponse("Internal Error ", { status: 500 });
 	}
 }
