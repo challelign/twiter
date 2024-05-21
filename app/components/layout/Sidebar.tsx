@@ -14,10 +14,6 @@ import FollowBarMobile from "./FollowBarMobile";
 
 const Sidebar = () => {
 	const { data: currentUser } = useCurrentUser();
-	const { data: users = [] } = useUsers();
-	// if (users.length === 0) {
-	// 	return null;
-	// }
 
 	console.log("current user", currentUser);
 	const items = [
