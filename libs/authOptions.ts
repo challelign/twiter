@@ -13,7 +13,10 @@ export const authOptions: AuthOptions = {
 			},
 			async authorize(credentials) {
 				if (!credentials?.email || !credentials?.password) {
+					// throw new Error("Missing credentials");
+					console.log("Missing credentials");
 					throw new Error("Missing credentials");
+					// return { error: "Missing credentials" };
 				}
 
 				const user = await db.user.findFirst({
@@ -24,6 +27,7 @@ export const authOptions: AuthOptions = {
 
 				if (!user || !user.id || !user.hashedPassword) {
 					throw new Error("Invalid credentials");
+					// return { error: "Missing credentials" };
 				}
 
 				const correctPassword = await bcrypt.compare(
@@ -33,6 +37,7 @@ export const authOptions: AuthOptions = {
 
 				if (!correctPassword) {
 					throw new Error("Invalid credentials");
+					// return { error: "Missing credentials" };
 				}
 
 				console.log("USER_FROM_Auth_options", user);

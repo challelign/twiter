@@ -5,6 +5,7 @@ import Input from "../Input";
 import Modal from "../Modal";
 import useRegisterModal from "@/hooks/useRegisterModal";
 import { signIn } from "next-auth/react";
+import toast from "react-hot-toast";
 
 const LoginModal = () => {
 	const loginModal = useLoginModal();
@@ -13,6 +14,7 @@ const LoginModal = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 
 	const onToggle = useCallback(() => {
 		if (isLoading) {
@@ -21,27 +23,40 @@ const LoginModal = () => {
 
 		loginModal.onClose();
 		registerModal.onOpen();
-	}, [loginModal, isLoading, registerModal]);
+	}, [loginModal, registerModal]);
 
 	const onSubmit = useCallback(async () => {
 		try {
 			setIsLoading(true);
-			await signIn("credentials", {
+			setError(null);
+			if (!email || !password) {
+				return setError("Please enter username and password");
+			}
+			const signInResult = await signIn("credentials", {
 				email,
 				password,
+				callbackUrl: `${window.location.origin}`,
+				redirect: false,
 			});
+			if (!signInResult?.ok) {
+				return toast.error("Something went wrong, Invalid credentials");
+			}
+			toast.success("Login successful");
+
 			loginModal.onClose();
 		} catch (error) {
 			console.log("LOGIN_ERROR", error);
+			toast.error("Something went wrong");
 		} finally {
 			setIsLoading(false);
 		}
-	}, [email, password, loginModal]);
+	}, [email, password, loginModal, error]);
 	const bodyContent = (
 		<div className="flex flex-col gap-4">
 			<Input
 				placeholder="Email"
 				onChange={(e) => setEmail(e.target.value)}
+				type="email"
 				value={email}
 				disabled={isLoading}
 			/>
@@ -52,6 +67,11 @@ const LoginModal = () => {
 				value={password}
 				disabled={isLoading}
 			/>
+			{error && (
+				<div className="text-red-500 items-center justify-center text-center mb-4 border-2 h-10 pt-1 font-semibold ">
+					{error}
+				</div>
+			)}
 		</div>
 	);
 	const footerContent = (

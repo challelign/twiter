@@ -11,66 +11,97 @@ import Modal from "../Modal";
 import Image from "next/image";
 
 const EditModal = () => {
-	const { data: currentUser, mutate: mutateFetchedCurrentUser } =
-		useCurrentUser();
+	const { data: currentUser } = useCurrentUser();
 	const { mutate: mutateFetchedUser } = useUser(currentUser?.id);
 	const editModal = useEditModal();
 
-	const [profileImage, setProfileImage] = useState<string | null>(null);
-	const [coverImage, setCoverImage] = useState<string | null>(null);
+	const [profileImage, setProfileImage] = useState<File | null>(null);
+	const [coverImage, setCoverImage] = useState<File | null>(null);
 
-	// start to see image preview only
 	const [profileImageURL, setProfileImageURL] = useState<string | null>(null);
 	const [coverImageURL, setCoverImageURL] = useState<string | null>(null);
-	// end to see image preview only
+
 	const [name, setName] = useState("");
 	const [username, setUsername] = useState("");
 	const [bio, setBio] = useState("");
 	const [error, setError] = useState<string | null>(null);
 
+	/* 	const handleImageChange = useCallback(
+		async (
+			e: ChangeEvent<HTMLInputElement>,
+			setImage: (value: string | null) => void
+		) => {
+			if (e.target.files && e.target.files[0]) {
+				const file = e.target.files[0];
+
+				const reader = new FileReader();
+				reader.onloadend = () => {
+					setImage(reader.result as string);
+				};
+				reader.readAsDataURL(file);
+
+				const url = URL.createObjectURL(file);
+				setImageURL(url);
+				setImageURL2(url);
+			}
+		},
+		[]
+	);
+	const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		handleImageChange(e, setCoverImage);
+	};
+
+	const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		handleImageChange(e, setProfileImage);
+	}; */
+
 	const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files && e.target.files[0]) {
 			const file = e.target.files[0];
-
 			const reader = new FileReader();
 			reader.onloadend = () => {
-				setCoverImage(reader.result as string);
-				setCoverImageURL(URL.createObjectURL(file));
+				setCoverImage(file);
 			};
 			reader.readAsDataURL(file);
+			const url = URL.createObjectURL(file);
+			setCoverImageURL(url);
 		}
 	};
 
 	const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files && e.target.files[0]) {
 			const file = e.target.files[0];
-
 			const reader = new FileReader();
 			reader.onloadend = () => {
-				setProfileImage(reader.result as string);
-				setProfileImageURL(URL.createObjectURL(file));
+				setProfileImage(file);
 			};
 			reader.readAsDataURL(file);
+			const url = URL.createObjectURL(file);
+			setProfileImageURL(url);
 		}
 	};
+	// const handleProfileImageChange = (
+	// 	event: React.ChangeEvent<HTMLInputElement>
+	// ) => {
+	// 	if (event.target.files) {
+	// 		setProfileImage(event.target.files[0]);
+	// 		const url = URL.createObjectURL(event.target.files[0]);
+	// 		setProfileImageURL(url);
+	// 	}
+	// };
 
 	useEffect(() => {
-		// setProfileImage(currentUser?.profileImage);
-		// setCoverImage(currentUser?.coverImage);
-		setName(currentUser?.name);
-		setUsername(currentUser?.username);
-		setBio(currentUser?.bio);
-	}, [
-		currentUser?.name,
-		currentUser?.username,
-		currentUser?.bio,
-		currentUser?.profileImage,
-		currentUser?.coverImage,
-	]);
+		// setProfileImage(currentUser?.profileImage || null);
+		// setCoverImage(currentUser?.coverImage || null);
+		setName(currentUser?.name || "");
+		setUsername(currentUser?.username || "");
+		setBio(currentUser?.bio || "");
+	}, [currentUser]);
 
 	const [isLoading, setIsLoading] = useState(false);
 
 	const onSubmit = useCallback(async () => {
+		console.log(profileImage);
 		try {
 			setIsLoading(true);
 			setError(null);
@@ -81,8 +112,7 @@ const EditModal = () => {
 				profileImage: profileImage || undefined, // Make these fields optional
 				coverImage: coverImage || undefined,
 			});
-			mutateFetchedUser();
-			mutateFetchedCurrentUser();
+
 			toast.success("Profile updated");
 			editModal.onClose();
 		} catch (error: any) {
@@ -105,7 +135,6 @@ const EditModal = () => {
 		username,
 		bio,
 		mutateFetchedUser,
-		mutateFetchedCurrentUser,
 		profileImage,
 		coverImage,
 	]);
@@ -163,7 +192,6 @@ const EditModal = () => {
 					/>
 				</>
 			)}
-
 			<Input
 				placeholder="Username"
 				onChange={(e) => setUsername(e.target.value)}

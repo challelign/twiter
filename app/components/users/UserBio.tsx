@@ -12,7 +12,7 @@ interface UserBioProps {
 	userId: string;
 }
 const UserBio = ({ userId }: UserBioProps) => {
-	const { data: fetchedUser, isLoading } = useUser(userId as string);
+	const { data: fetchedUser, isLoading } = useUser(userId);
 	const { data: currentUser } = useCurrentUser();
 	const { isFollowing, toggleFollow } = useFollow(userId);
 	const editModal = useEditModal();

@@ -19,6 +19,36 @@ export async function POST(req: Request, res: Response) {
 			return new NextResponse("Invalid Id", { status: 403 });
 		}
 		let updateLikedIds = [...((post?.likedIds as string[]) || [])];
+
+		//start notifications
+		try {
+			const post = await db.post.findUnique({
+				include: {
+					user: true,
+				},
+				where: { id: postId },
+			});
+			console.log(post?.user.username);
+			if (post?.userId) {
+				await db.notification.create({
+					data: {
+						// body: "Someone liked your tweet!",
+						body: `${post?.user.username} liked your tweet!`,
+						userId: post?.userId,
+					},
+				});
+				await db.user.update({
+					where: { id: post.userId },
+					data: {
+						hasNotification: true,
+					},
+				});
+			}
+		} catch (error) {
+			console.log("notification", error);
+		}
+		//end notifications
+
 		updateLikedIds.push(currentUser.id);
 		const updatedPost = await db.post.update({
 			where: { id: postId },

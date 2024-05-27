@@ -32,6 +32,32 @@ export async function POST(req: Request, res: Response) {
 		});
 
 		console.log("comment =>", comment);
+
+		//start notifications
+		try {
+			const post = await db.post.findUnique({
+				include: { user: true },
+				where: { id: postId },
+			});
+			if (post?.userId) {
+				await db.notification.create({
+					data: {
+						// body: "Someone replied to your tweet!",
+						body: `${post?.user.username} replied to your tweet!`,
+						userId: post.userId,
+					},
+				});
+				await db.user.update({
+					where: { id: post.userId },
+					data: {
+						hasNotification: true,
+					},
+				});
+			}
+		} catch (error) {
+			console.log("notification", error);
+		}
+		//end notifications
 		return NextResponse.json(comment);
 	} catch (error) {
 		console.log("[CREATE_POST_COMMENT]", error);

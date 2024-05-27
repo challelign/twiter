@@ -11,6 +11,7 @@ import FollowBar from "./FollowBar";
 import useUsers from "@/hooks/useUsers";
 import Avatar from "../Avatar";
 import FollowBarMobile from "./FollowBarMobile";
+import ProfileTweetButton from "./ProfileTweetButton";
 
 const Sidebar = () => {
 	const { data: currentUser } = useCurrentUser();
@@ -27,7 +28,7 @@ const Sidebar = () => {
 			href: "/notifications",
 			icon: BsBellFill,
 			auth: true,
-			alert: true,
+			alert: currentUser?.hasNotification,
 		},
 		{
 			label: "Profile",
@@ -60,6 +61,7 @@ const Sidebar = () => {
 					)}
 					<SidebarTweetButton />
 				</div>
+				<ProfileTweetButton />
 
 				<FollowBarMobile />
 			</div>

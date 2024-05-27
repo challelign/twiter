@@ -25,6 +25,7 @@ const Input = ({
 			<input
 				disabled={disabled}
 				onChange={onChange}
+				required
 				value={value}
 				placeholder={placeholder}
 				type={type}

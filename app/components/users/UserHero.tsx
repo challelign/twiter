@@ -9,16 +9,16 @@ interface UserHeroProps {
 	userId: string;
 }
 const UserHero = ({ userId }: UserHeroProps) => {
-	const { data: fetchedUser, isLoading } = useUser(userId as string);
+	const { data: fetchedUser, isLoading } = useUser(userId);
 	console.log(fetchedUser);
-	const [base64, setBase64] = useState(fetchedUser?.profileImage);
 
 	return (
 		<div>
 			<div className="bg-neutral-700 h-44 relative">
 				{fetchedUser?.coverImage && (
 					<Image
-						src={fetchedUser?.coverImage}
+						// src={fetchedUser?.coverImage}
+						src={`/userProfile/${fetchedUser?.coverImage}`}
 						// src={base64}
 						alt="Cover Image"
 						fill

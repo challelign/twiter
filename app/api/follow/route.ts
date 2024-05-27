@@ -20,6 +20,26 @@ export async function POST(req: Request, res: Response) {
 		}
 		let updateFollowingIds = [...((user?.followingIds as string[]) || [])];
 		updateFollowingIds.push(userId);
+
+		//start notifications
+		try {
+			await db.notification.create({
+				data: {
+					// body: "Someone followed you!",
+					body: `${user.username} followed you!`,
+					userId,
+				},
+			});
+			await db.user.update({
+				where: { id: userId },
+				data: {
+					hasNotification: true,
+				},
+			});
+		} catch (error) {
+			console.log("notification", error);
+		}
+		//end notifications
 		const updatedUser = await db.user.update({
 			where: { id: currentUser.id },
 			data: {

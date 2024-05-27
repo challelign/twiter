@@ -7,6 +7,7 @@ import useRegisterModal from "@/hooks/useRegisterModal";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
+import validateEmail from "@/libs/validateEmail";
 
 const RegisterModal = () => {
 	const loginModal = useLoginModal();
@@ -18,6 +19,7 @@ const RegisterModal = () => {
 	const [name, setName] = useState("");
 
 	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 
 	const onToggle = useCallback(() => {
 		if (isLoading) {
@@ -29,9 +31,17 @@ const RegisterModal = () => {
 	}, [loginModal, registerModal, isLoading, email, password, username, name]);
 
 	const onSubmit = useCallback(async () => {
-		alert("regiser clicked");
 		try {
 			setIsLoading(true);
+			setError(null);
+
+			if (!validateEmail(email)) {
+				return setError("Invalid email format");
+			}
+			if (!email || !name || !password || !username) {
+				return setError("All the fields are required");
+			}
+
 			const user = await axios.post("/api/users", {
 				email,
 				password,
@@ -45,9 +55,17 @@ const RegisterModal = () => {
 			});
 			console.log("RegisteredData", user);
 			// registerModal.onClose();
-		} catch (error) {
+		} catch (error: any) {
 			console.log("REGISTER_ERROR", error);
-			toast.error("Something went wrong");
+			console.log("REGISTER_ERROR", error.response.data);
+			if (error.response.status === 403) {
+				// toast.error("User exist try different email");
+				toast.error(error.response.data);
+			} else if (error.response.status === 400) {
+				toast.error(error.response.data);
+			} else {
+				toast.error("Something went wrong");
+			}
 		} finally {
 			setIsLoading(false);
 		}
@@ -80,6 +98,11 @@ const RegisterModal = () => {
 				value={password}
 				onChange={(e) => setPassword(e.target.value)}
 			/>
+			{error && (
+				<div className="text-red-500 items-center justify-center text-center mb-4 border-2 h-10 pt-1 font-semibold ">
+					{error}
+				</div>
+			)}
 		</div>
 	);
 
