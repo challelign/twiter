@@ -50,8 +50,10 @@ model Post {
 }
 
 model Comment {
-  id        String   @id @default(uuid())
-  body      String
+  id    String  @id @default(uuid())
+  body  String
+  image String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId    String

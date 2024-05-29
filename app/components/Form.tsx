@@ -10,6 +10,8 @@ import Button from "./Button";
 import Avatar from "./Avatar";
 import Loading from "./skeleton/Loading";
 import usePost from "@/hooks/usePost";
+import Input from "./Input";
+import Image from "next/image";
 interface FormProps {
 	placeholder: string;
 	isComment?: boolean;
@@ -24,16 +26,34 @@ const Form = ({ placeholder, isComment, postId }: FormProps) => {
 	const { mutate: mutatePost } = usePost(postId as string);
 	const [body, setBody] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
+	const [bodyImage, setBodyImage] = useState<string | null>(null);
+	const [bodyImageURL, setBodyImageURL] = useState<string | null>(null);
 
+	const handleBodyImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files[0]) {
+			const file = e.target.files[0];
+
+			const reader = new FileReader();
+			reader.onloadend = () => {
+				setBodyImage(reader.result as string);
+				setBodyImageURL(URL.createObjectURL(file));
+			};
+			reader.readAsDataURL(file);
+		}
+	};
 	const onSubmit = useCallback(async () => {
 		try {
 			setIsLoading(true);
 			const url = isComment ? `/api/comments/?postId=${postId}` : "/api/posts";
-			const posts = await axios.post(url, {
-				body,
+			await axios.post(url, {
+				body: body,
+				bodyImage: bodyImage || undefined,
 			});
 			toast.success("Tweet created");
 			setBody("");
+			setBodyImage(null);
+			setBodyImage("");
+			setBodyImageURL(null);
 			mutatePosts();
 			mutatePost();
 		} catch (error) {
@@ -42,7 +62,7 @@ const Form = ({ placeholder, isComment, postId }: FormProps) => {
 		} finally {
 			setIsLoading(false);
 		}
-	}, [body, mutatePosts, isComment, postId, mutatePost]);
+	}, [body, bodyImage, mutatePosts, isComment, postId, mutatePost]);
 	if (checkUserLogin) {
 		return <Loading />;
 	}
@@ -73,6 +93,29 @@ const Form = ({ placeholder, isComment, postId }: FormProps) => {
                             "
 							placeholder={placeholder}
 						></textarea>
+
+						{!isComment && (
+							<>
+								<Input
+									placeholder="Upload Body image"
+									onChange={handleBodyImageChange}
+									type="file"
+									disabled={isLoading}
+								/>
+
+								{bodyImage && (
+									<>
+										<Image
+											src={bodyImageURL!}
+											height={400}
+											width={400}
+											alt="Product Image"
+										/>
+									</>
+								)}
+							</>
+						)}
+
 						<hr
 							className="  opacity-0 
                                 peer-focus:opacity-100 
@@ -83,7 +126,7 @@ const Form = ({ placeholder, isComment, postId }: FormProps) => {
 						/>
 						<div className="mt-4 flex flex-row justify-end">
 							<Button
-								disabled={isLoading || !body}
+								disabled={isLoading || (!body && !bodyImage)}
 								onClick={onSubmit}
 								label="Tweet"
 							/>

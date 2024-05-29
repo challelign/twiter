@@ -38,7 +38,9 @@ const CommentItem = ({ data }: CommentItemProps) => {
       "
 			>
 				<div className="flex flex-row items-start gap-3">
-					<Avatar userId={data?.user.id} />
+					<div className="">
+						<Avatar userId={data?.user.id} />
+					</div>
 					<div>
 						<div className="flex flex-row items-center gap-2">
 							<p
@@ -66,7 +68,7 @@ const CommentItem = ({ data }: CommentItemProps) => {
 							</span>
 							<span className="text-neutral-500 text-sm">{createdAt}</span>
 						</div>
-						<div className="text-white mt-1">{data?.body}</div>
+						<div className="text-white mt-1 text-wrap"> {data?.body}</div>
 					</div>
 				</div>
 			</div>

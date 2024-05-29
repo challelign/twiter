@@ -3,16 +3,17 @@ import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import { AiFillHeart, AiOutlineHeart, AiOutlineMessage } from "react-icons/ai";
 import { formatDistanceToNowStrict } from "date-fns";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 import Avatar from "../Avatar";
 import useLoginModal from "@/hooks/useLoginModal";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import useLike from "@/hooks/useLike";
+import Image from "next/image";
 interface PostItemProps {
 	data: Record<string, any>;
 	userId?: string;
 }
-
 const PostItem = ({ data, userId }: PostItemProps) => {
 	const router = useRouter();
 	const loginModal = useLoginModal();
@@ -96,7 +97,18 @@ const PostItem = ({ data, userId }: PostItemProps) => {
 						</span>
 						<span className="text-neutral-500 text-sm">{createdAt}</span>
 					</div>
-					<div className="text-white mt-1">{data.body}</div>
+					<div className="text-white mt-1 text-wrap">{data?.body}</div>
+					{data?.image && (
+						<div className="text-white mt-1 ">
+							<Image
+								src={`/postImage/${data?.image}`}
+								alt={data?.user.name}
+								height={250}
+								width={400}
+								objectFit=""
+							/>
+						</div>
+					)}
 					<div className="flex flex-row items-center mt-3 gap-10">
 						<div
 							className="
