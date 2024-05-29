@@ -1,11 +1,10 @@
 import { db } from "@/libs/prismadb";
-import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
 import { serverAuth } from "@/libs/serverAuth";
 import validateEmail from "@/libs/validateEmail";
+import bcrypt from "bcryptjs";
 import fs from "fs/promises";
+import { NextResponse } from "next/server";
 import path from "path";
-import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request, res: Response) {
 	try {

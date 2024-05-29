@@ -1,7 +1,7 @@
 "use client";
 import { formatDistanceToNowStrict } from "date-fns";
 import { useRouter } from "next/navigation";
-import React, { useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import Avatar from "../Avatar";
 
 interface CommentItemProps {

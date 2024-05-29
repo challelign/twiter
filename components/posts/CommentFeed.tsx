@@ -1,8 +1,6 @@
 "use client";
 
-import { comment } from "postcss";
 import CommentItem from "./CommentItem";
-import Header from "../Header";
 
 interface CommentFeedProps {
 	comments?: Record<string, any>[];

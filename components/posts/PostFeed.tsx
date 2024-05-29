@@ -1,6 +1,5 @@
 "use client";
 import usePosts from "@/hooks/usePosts";
-import React from "react";
 import PostItem from "./PostItem";
 interface PostFeedProps {
 	userId?: string;
