@@ -1,9 +1,9 @@
 "use client";
-import Form from "@/app/components/Form";
-import Header from "@/app/components/Header";
-import CommentFeed from "@/app/components/posts/CommentFeed";
-import PostItem from "@/app/components/posts/PostItem";
-import SinglePostLoader from "@/app/components/skeleton/SinglePostLoader";
+import Form from "@/components/Form";
+import Header from "@/components/Header";
+import CommentFeed from "@/components/posts/CommentFeed";
+import PostItem from "@/components/posts/PostItem";
+import SinglePostLoader from "@/components/skeleton/SinglePostLoader";
 import usePost from "@/hooks/usePost";
 import { useRouter } from "next/navigation";
 import React from "react";

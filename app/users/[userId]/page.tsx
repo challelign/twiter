@@ -1,11 +1,11 @@
 "use client";
-import Header from "@/app/components/Header";
+import Header from "@/components/Header";
 import { ClipLoader } from "react-spinners";
 
 import useUser from "@/hooks/useUser";
-import UserHero from "@/app/components/users/UserHero";
-import UserBio from "@/app/components/users/UserBio";
-import PostFeed from "@/app/components/posts/PostFeed";
+import UserHero from "@/components/users/UserHero";
+import UserBio from "@/components/users/UserBio";
+import PostFeed from "@/components/posts/PostFeed";
 
 const userPage = ({ params }: { params: { userId: string } }) => {
 	const userId = params.userId;

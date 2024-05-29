@@ -1,8 +1,8 @@
 "use server";
 import { getServerSession } from "next-auth";
-import Header from "../components/Header";
+import Header from "../../components/Header";
 import { redirect } from "next/navigation";
-import NotificationsFeed from "../components/NotificationsFeed";
+import NotificationsFeed from "../../components/NotificationsFeed";
 
 const NotificationsPage = async () => {
 	const session = await getServerSession();
