@@ -14,10 +14,10 @@ export async function POST(req: Request, res: Response) {
 		const { body, bodyImage } = await req.json();
 		console.log(bodyImage);
 		console.log(body);
-		let bodyImagePath;
+		let bodyImagePath = null;
 
 		if (bodyImage) {
-			bodyImagePath = await handleImageUpdate(bodyImage, "public/postImage");
+			bodyImagePath = await handleImageUpdate(bodyImage, "public/postImage/");
 		}
 
 		console.log("bodyImagePath", bodyImagePath);

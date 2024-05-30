@@ -255,7 +255,7 @@ export async function PATCH(req: Request, res: Response) {
 			profileImagePath = await handleImageUpdate(
 				existingUser.profileImage, //existingImagePath
 				profileImage, //newImage
-				"public/userProfile" //basePath
+				"public/userProfile/" //basePath
 			);
 		}
 
@@ -264,7 +264,7 @@ export async function PATCH(req: Request, res: Response) {
 			coverImagePath = await handleImageUpdate(
 				existingUser.coverImage,
 				coverImage,
-				"public/userProfile"
+				"public/userProfile/"
 			);
 		}
 
