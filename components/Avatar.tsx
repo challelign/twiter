@@ -54,12 +54,16 @@ const Avatar: React.FC<AvatarProps> = ({ userId, isLarge, hasBorder }) => {
 				}}
 				alt="Avatar"
 				onClick={onClick}
-				src={
-					`/userProfile/${fetchedUser?.profileImage}` ||
-					"/images/placeholder.png"
-				}
+				// src={
+				// 	`/userProfile/${fetchedUser?.profileImage}` ||
+				// 	"/images/placeholder.png"
+				// }
 
-				// src={fetchedUser?.profileImage || "/images/placeholder.png"}
+				src={
+					fetchedUser?.profileImage
+						? `/userProfile/${fetchedUser?.profileImage}`
+						: "/images/placeholder.png"
+				}
 			/>
 		</div>
 	);

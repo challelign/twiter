@@ -1,8 +1,7 @@
-import Image from "next/image";
-import Header from "../components/Header";
-import Form from "../components/Form";
-import { Metadata } from "next";
 import PostFeed from "@/components/posts/PostFeed";
+import { Metadata } from "next";
+import Form from "../components/Form";
+import Header from "../components/Header";
 export const metadata: Metadata = {
 	title: "Twitter App",
 	description: "Twitter by create Challelign Tilahun",
