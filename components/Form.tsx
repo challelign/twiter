@@ -56,9 +56,9 @@ const Form = ({ placeholder, isComment, postId }: FormProps) => {
 			setBodyImageURL(null);
 			mutatePosts();
 			mutatePost();
-		} catch (error) {
+		} catch (error: any) {
 			console.log("POST_CREATE_ERROR", error);
-			toast.error("something went wrong");
+			toast.error(error);
 		} finally {
 			setIsLoading(false);
 		}

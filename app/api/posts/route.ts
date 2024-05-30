@@ -32,9 +32,9 @@ export async function POST(req: Request, res: Response) {
 
 		console.log("POST =>", post);
 		return NextResponse.json(post);
-	} catch (error) {
+	} catch (error: any) {
 		console.log("[CREATE_POST]", error);
-		return new NextResponse("Internal Error ", { status: 500 });
+		return new NextResponse(error, { status: 500 });
 	}
 }
 export async function GET(req: Request, res: Response) {
