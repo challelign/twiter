@@ -1,9 +1,6 @@
 import { db } from "@/libs/prismadb";
 import { serverAuth } from "@/libs/serverAuth";
-import crypto from "crypto";
-import fs from "fs/promises";
 import { NextResponse } from "next/server";
-import path from "path";
 export async function POST(req: Request, res: Response) {
 	try {
 		const currentUser = await serverAuth();
@@ -12,29 +9,20 @@ export async function POST(req: Request, res: Response) {
 			return new NextResponse("Please Login ", { status: 403 });
 		}
 		const { body, bodyImage } = await req.json();
-		console.log(bodyImage);
-		console.log(body);
-		let bodyImagePath = null;
-
-		if (bodyImage) {
-			bodyImagePath = await handleImageUpdate(bodyImage, "public/postImage/");
-		}
-
-		console.log("bodyImagePath", bodyImagePath);
 
 		const post = await db.post.create({
 			data: {
 				body,
-				image: bodyImagePath,
+				image: bodyImage,
 				userId: currentUser?.id,
 			},
 		});
 
 		console.log("POST =>", post);
 		return NextResponse.json(post);
-	} catch (error: any) {
+	} catch (error) {
 		console.log("[CREATE_POST]", error);
-		return new NextResponse(error, { status: 500 });
+		return new NextResponse("Internal Error ", { status: 500 });
 	}
 }
 export async function GET(req: Request, res: Response) {
@@ -68,18 +56,4 @@ export async function GET(req: Request, res: Response) {
 		console.log("[GET_POST]", error);
 		return new NextResponse("Internal Error ", { status: 500 });
 	}
-}
-
-async function handleImageUpdate(
-	newImage: string,
-	basePath: string
-): Promise<string> {
-	console.log(newImage);
-	console.log(basePath);
-	const imageBuffer = Buffer.from(newImage.split(",")[1], "base64");
-	const newImagePath = `${crypto.randomUUID()}.png`;
-
-	await fs.writeFile(path.join(basePath, newImagePath), imageBuffer);
-
-	return newImagePath;
 }

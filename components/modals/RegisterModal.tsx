@@ -8,6 +8,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
 import validateEmail from "@/libs/validateEmail";
+import ImageUpload from "../ImageUpload";
 
 const RegisterModal = () => {
 	const loginModal = useLoginModal();
@@ -98,6 +99,7 @@ const RegisterModal = () => {
 				value={password}
 				onChange={(e) => setPassword(e.target.value)}
 			/>
+
 			{error && (
 				<div className="text-red-500 items-center justify-center text-center mb-4 border-2 h-10 pt-1 font-semibold ">
 					{error}

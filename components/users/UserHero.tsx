@@ -3,7 +3,6 @@
 import useUser from "@/hooks/useUser";
 import Image from "next/image";
 import Avatar from "../Avatar";
-import { useState } from "react";
 
 interface UserHeroProps {
 	userId: string;
@@ -18,7 +17,8 @@ const UserHero = ({ userId }: UserHeroProps) => {
 				{fetchedUser?.coverImage && (
 					<Image
 						// src={fetchedUser?.coverImage}
-						src={`/userProfile/${fetchedUser?.coverImage}`}
+						// src={`/userProfile/${fetchedUser?.coverImage}`}
+						src={fetchedUser?.coverImage}
 						// src={base64}
 						alt="Cover Image"
 						fill

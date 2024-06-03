@@ -1,17 +1,16 @@
 "use client";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import useLoginModal from "@/hooks/useLoginModal";
+import usePost from "@/hooks/usePost";
 import usePosts from "@/hooks/usePosts";
 import useRegisterModal from "@/hooks/useRegisterModal";
 import axios from "axios";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import toast from "react-hot-toast";
-import Button from "./Button";
 import Avatar from "./Avatar";
+import Button from "./Button";
+import CloudinaryUploadWidget from "./CloudinaryUploadWidget";
 import Loading from "./skeleton/Loading";
-import usePost from "@/hooks/usePost";
-import Input from "./Input";
-import Image from "next/image";
 interface FormProps {
 	placeholder: string;
 	isComment?: boolean;
@@ -27,19 +26,9 @@ const Form = ({ placeholder, isComment, postId }: FormProps) => {
 	const [body, setBody] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const [bodyImage, setBodyImage] = useState<string | null>(null);
-	const [bodyImageURL, setBodyImageURL] = useState<string | null>(null);
 
-	const handleBodyImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (e.target.files && e.target.files[0]) {
-			const file = e.target.files[0];
-
-			const reader = new FileReader();
-			reader.onloadend = () => {
-				setBodyImage(reader.result as string);
-				setBodyImageURL(URL.createObjectURL(file));
-			};
-			reader.readAsDataURL(file);
-		}
+	const handleBodyImageChange = (url: string) => {
+		setBodyImage(url);
 	};
 	const onSubmit = useCallback(async () => {
 		try {
@@ -53,7 +42,6 @@ const Form = ({ placeholder, isComment, postId }: FormProps) => {
 			setBody("");
 			setBodyImage(null);
 			setBodyImage("");
-			setBodyImageURL(null);
 			mutatePosts();
 			mutatePost();
 		} catch (error: any) {
@@ -96,22 +84,16 @@ const Form = ({ placeholder, isComment, postId }: FormProps) => {
 
 						{!isComment && (
 							<>
-								<Input
-									placeholder="Upload Body image"
-									onChange={handleBodyImageChange}
-									type="file"
-									disabled={isLoading}
+								<CloudinaryUploadWidget
+									onUpload={handleBodyImageChange}
+									widgetId="upload_widget_post"
 								/>
 
 								{bodyImage && (
-									<>
-										<Image
-											src={bodyImageURL!}
-											height={400}
-											width={400}
-											alt="Product Image"
-										/>
-									</>
+									<div>
+										<h2>Upload post image</h2>
+										<img src={bodyImage} alt="Uploaded" />
+									</div>
 								)}
 							</>
 						)}

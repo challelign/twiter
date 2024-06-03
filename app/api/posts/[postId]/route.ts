@@ -1,9 +1,14 @@
 import { db } from "@/libs/prismadb";
 import { serverAuth } from "@/libs/serverAuth";
-import crypto from "crypto";
-import fs from "fs/promises";
 import { NextResponse } from "next/server";
-import path from "path";
+import { v2 as cloudinary } from "cloudinary";
+
+// Configure Cloudinary
+cloudinary.config({
+	cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+	api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+	api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 export async function GET(
 	req: Request,
 	{ params }: { params: { postId: string } }
@@ -63,17 +68,22 @@ export async function DELETE(
 		if (!postOwner) {
 			return new NextResponse("Unauthorized ", { status: 403 });
 		}
-		// delete the image
-		if (postOwner.image) {
-			const existingPath = path.join("public/postImage", postOwner.image);
-			try {
-				await fs.unlink(existingPath);
-			} catch (error) {
-				console.log("Error deleting existing image:", error);
+		// Check and delete old images if new ones are uploaded
+		const deleteOldImage = async (oldUrl: string | null) => {
+			console.log("Delete old image", deleteOldImage);
+			if (typeof oldUrl === "string") {
+				const publicId = oldUrl.split("/").pop();
+				if (publicId) {
+					const publicIdWithoutExtension = publicId.split(".")[0];
+					await cloudinary.uploader.destroy(publicIdWithoutExtension);
+				}
 			}
+		};
+
+		if (postOwner.image) {
+			await deleteOldImage(postOwner.image);
 		}
 		// delete the post
-
 		const deletedPost = await db.post.delete({
 			where: {
 				id: postId,
@@ -86,17 +96,4 @@ export async function DELETE(
 		console.log("[GET_USER]", error);
 		return new NextResponse("Internal Error ", { status: 500 });
 	}
-}
-async function handleImageUpdate(
-	newImage: string,
-	basePath: string
-): Promise<string> {
-	console.log(newImage);
-	console.log(basePath);
-	const imageBuffer = Buffer.from(newImage.split(",")[1], "base64");
-	const newImagePath = `${crypto.randomUUID()}.png`;
-
-	await fs.writeFile(path.join(basePath, newImagePath), imageBuffer);
-
-	return newImagePath;
 }

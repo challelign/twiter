@@ -17,13 +17,15 @@ import usePost from "@/hooks/usePost";
 import usePosts from "@/hooks/usePosts";
 import axios from "axios";
 import { formatDistanceToNowStrict } from "date-fns";
-import { Delete, MoreHorizontal, Pencil } from "lucide-react";
+import { Delete, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { AiFillHeart, AiOutlineHeart, AiOutlineMessage } from "react-icons/ai";
+import { FaRegCopy } from "react-icons/fa";
+import { TbListDetails } from "react-icons/tb";
 import Avatar from "../Avatar";
 import { ConfirmModal } from "../modals/confirm-modal";
 import { Button } from "../ui/button";
@@ -95,10 +97,16 @@ const PostItem = ({ data, userId, comments }: PostItemProps) => {
 		}
 	}, [mutatePosts, data?.id, mutatePost, router]);
 
-	const handleEdit = useCallback(() => {
-		router.push(`/posts/${data.id}`);
-	}, [router, data.id]);
-
+	const copyToClipboard = async (id: string) => {
+		const baseURL = process.env.NEXT_PUBLIC_APP_URL + `/posts/` + id;
+		try {
+			await navigator.clipboard.writeText(baseURL);
+			console.log("Text copied to clipboard:", baseURL);
+			toast.success("Text copied to clipboard");
+		} catch (err) {
+			toast.error("Something went wrong while copying the text");
+		}
+	};
 	return (
 		<div
 			// onClick={goToPost}
@@ -143,64 +151,36 @@ const PostItem = ({ data, userId, comments }: PostItemProps) => {
 
 						<span className="text-neutral-500 text-sm">{createdAt}</span>
 						<span className="text-sm text-white gap-x-10 ml-20 pl-20   cursor-pointer">
-							{/* <DropdownMenu>
+							<DropdownMenu>
 								<DropdownMenuTrigger asChild>
-									<Button className="bg-black  hover:bg-neutral-900 " size="sm">
-										<HiOutlineDotsHorizontal className="h-10 w-10 text-white" />
+									<Button variant="ghost" className="h-4 w-8 p-0">
+										<span className="sr-only">Open menu</span>
+										<MoreHorizontal className="h-4 w-8" />
 									</Button>
 								</DropdownMenuTrigger>
-								<DropdownMenuContent className="">
-									<DropdownMenuSeparator />
-									<DropdownMenuGroup>
-										<DropdownMenuItem onClick={handleEdit}>
-											<Edit className="mr-2 h-4 w-4" />
-											<span>Edit</span>
-										</DropdownMenuItem>
 
-										<ConfirmModal onConfirm={handleDelete} dataModal={data}>
-											<button className="flex items-center justify-center font-semibold ">
-												<Delete className="mr-2 h-4 w-4 " />
-												<span>Delete</span>
-											</button>
-										</ConfirmModal>
-
+								<DropdownMenuContent align="end">
+									<Link href={`/posts/${data.id}`}>
 										<DropdownMenuItem>
-											<FaRegCopy className="mr-2 h-4 w-4" />
-											<span>Copy link </span>
+											<TbListDetails className=" h-4 w-4 mr-2" />
+											Detail
 										</DropdownMenuItem>
-										<DropdownMenuItem>
-											<BiRepost className="mr-2 h-4 w-4" />
-											<span>Repost </span>
-										</DropdownMenuItem>
-									</DropdownMenuGroup>
-									<DropdownMenuSeparator />
-								</DropdownMenuContent>
-							</DropdownMenu> */}
+									</Link>
 
-							{currentUser?.id === data?.user?.id && (
-								<DropdownMenu>
-									<DropdownMenuTrigger asChild>
-										<Button variant="ghost" className="h-4 w-8 p-0">
-											<span className="sr-only">Open menu</span>
-											<MoreHorizontal className="h-4 w-8" />
-										</Button>
-									</DropdownMenuTrigger>
-									<DropdownMenuContent align="end">
-										<Link href={`/posts/${data.id}`}>
-											<DropdownMenuItem>
-												<Pencil className=" h-4 w-4 mr-2" />
-												Edit
-											</DropdownMenuItem>
-										</Link>
-
+									{currentUser?.id === data?.user?.id && (
 										<ConfirmModal onConfirm={handleDelete} dataModal={data}>
 											<button className="flex items-center justify-center gap-x-2 ">
-												<Delete className=" h-4 w-4 mr-2 gap-x-2" /> Delete
+												<Delete className="  h-4 w-4 mr-2" /> Delete
 											</button>
 										</ConfirmModal>
-									</DropdownMenuContent>
-								</DropdownMenu>
-							)}
+									)}
+
+									<DropdownMenuItem onClick={() => copyToClipboard(data.id)}>
+										<FaRegCopy className="h-4 w-4 mr-2" />
+										Copy link
+									</DropdownMenuItem>
+								</DropdownMenuContent>
+							</DropdownMenu>
 						</span>
 					</div>
 					<HoverCard>
@@ -219,7 +199,8 @@ const PostItem = ({ data, userId, comments }: PostItemProps) => {
 					{data?.image && (
 						<div className="text-white mt-1 " onClick={goToPost}>
 							<Image
-								src={`/postImage/${data?.image}`}
+								// src={`/postImage/${data?.image}`}
+								src={`${data?.image}`}
 								alt={data?.user.name}
 								height={250}
 								width={400}

@@ -22,7 +22,12 @@ export default function RootLayout({
 		<>
 			<html lang="en">
 				{/* <Modal isOpen title="Test Modal" actionLabel="Submit" /> */}
-
+				<head>
+					<script
+						src="https://widget.cloudinary.com/v2.0/global/all.js"
+						type="text/javascript"
+					></script>
+				</head>
 				<body className={inter.className}>
 					<ToastProvider />
 					<EditModal />

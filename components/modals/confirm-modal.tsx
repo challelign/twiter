@@ -11,10 +11,8 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Post, User } from "@prisma/client";
-import { ScrollArea } from "../ui/scroll-area";
-import Avatar from "../Avatar";
 import Image from "next/image";
+import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 
 interface ConfirmModalProps {
@@ -50,7 +48,7 @@ export const ConfirmModal = ({
 							{dataModal?.image && (
 								<div className="text-white mt-1 ">
 									<Image
-										src={`/postImage/${dataModal?.image}`}
+										src={`${dataModal?.image}`}
 										alt={dataModal?.user.name}
 										height={250}
 										width={400}

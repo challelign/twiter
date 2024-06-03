@@ -44,24 +44,23 @@ const Modal = ({
 		<>
 			<div
 				className="justify-center 
-          items-center 
-          flex 
-          overflow-x-hidden 
-          overflow-y-auto 
-		  custom-scrollbar
-          fixed 
-          inset-0 
-          z-50 
-          outline-none 
-          focus:outline-none
-          bg-neutral-800
-          bg-opacity-70"
+							items-center 
+							flex 
+							overflow-x-hidden 
+							overflow-y-auto 
+							custom-scrollbar
+							fixed 
+							inset-0 
+							z-50 
+							outline-none 
+							focus:outline-none
+							bg-neutral-800
+							bg-opacity-70"
 			>
 				<div className="relative w-full lg:w-2/6 my-4 mx-auto lg:max-w-3xl h-full  ">
 					{/* content to the above and below div  i remove lg:h-auto */}
 					<div
 						className=" h-full
-                            
                             border-0 
                             rounded-lg 
                             shadow-lg 
