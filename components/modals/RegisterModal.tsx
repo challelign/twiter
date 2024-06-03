@@ -1,14 +1,13 @@
 "use client";
-import { useCallback, useState } from "react";
-import Input from "../Input";
-import Modal from "../Modal";
 import useLoginModal from "@/hooks/useLoginModal";
 import useRegisterModal from "@/hooks/useRegisterModal";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { signIn } from "next-auth/react";
 import validateEmail from "@/libs/validateEmail";
-import ImageUpload from "../ImageUpload";
+import axios from "axios";
+import { signIn } from "next-auth/react";
+import { useCallback, useState } from "react";
+import toast from "react-hot-toast";
+import Input from "../Input";
+import Modal from "../Modal";
 
 const RegisterModal = () => {
 	const loginModal = useLoginModal();
